@@ -1,0 +1,55 @@
+--JUAN PABLO GOMEZ MONSALVE
+--PARTE I--
+--1)
+CREATE TABLESPACE quiz
+  DATAFILE 'quiz1.dbf' SIZE 15M,'quiz2.dbf' SIZE 15M,'quiz3.dbf' SIZE 15M;
+  
+--2)  
+CREATE PROFILE student LIMIT
+  IDLE_TIME 20;
+  
+--3)
+CREATE USER usuario_1 
+  IDENTIFIED BY usuario_1
+  DEFAULT TABLESPACE quiz
+  PROFILE student;
+  
+GRANT CONNECT, CREATE TABLE TO usuario_1;
+
+--4)
+  CREATE USER usuario_2 
+  IDENTIFIED BY usuario_2
+  DEFAULT TABLESPACE quiz
+  PROFILE student;
+  
+GRANT CONNECT TO usuario_2;
+
+ALTER USER usuario_1 QUOTA UNLIMITED ON quiz;
+
+ALTER USER usuario_2 QUOTA UNLIMITED ON quiz;
+
+--PARTE II
+--1)
+create table attacks (
+	id INT,
+	url VARCHAR(2048),
+	ip_address VARCHAR(20),
+	number_of_attacks INT,
+	time_of_last_attack TIMESTAMP
+);
+
+
+--2)
+SELECT * FROM ATTACKS;
+
+--3)
+GRANT SELECT ON usuario_1.attacks TO usuario_2;
+
+--PART III
+--1)
+SELECT COUNT(URL) FROM usuario_1.ATTACKS where URL LIKE 'https%';
+--2)
+SELECT * FROM usuario_1.ATTACKS where URL LIKE '%google%' ORDER BY NUMBER_OF_ATTACKS DESC;
+--3)
+SELECT IP_ADDRESS, TIME_OF_LAST_ATTACK FROM usuario_1.ATTACKS
+WHERE TIME_OF_LAST_ATTACK <= TO_DATE('31/12/17 23:59:59,000000000 PM', 'YYYY-MM-DD HH24:MI:SS');
